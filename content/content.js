@@ -1,5 +1,5 @@
 // Content script that runs on all pages
-import { getScraper } from '../lib/scrapers/index.js';
+const BAXUS_API = 'https://services.baxus.co/api/search/listings';
 
 // Don't rerun on the same page
 let hasRun = false;
@@ -41,14 +41,7 @@ async function detectBottle() {
   
   try {
     // Get appropriate scraper for the current site
-    const scraper = getScraper(window.location.href);
-    if (!scraper) {
-      isCheckingBottle = false;
-      return;
-    }
-    
-    // Attempt to scrape bottle info
-    const bottleInfo = scraper();
+    const bottleInfo = scrapeProductInfo();
     if (!bottleInfo || !bottleInfo.name || !bottleInfo.price) {
       isCheckingBottle = false;
       return;
@@ -66,8 +59,193 @@ async function detectBottle() {
 }
 
 /**
+ * Scrapes product information from the current page
+ */
+function scrapeProductInfo() {
+  // Check if current page likely contains a single product
+  if (!isProductPage()) return null;
+  
+  try {
+    // Extract product details from the page
+    const bottleInfo = {
+      name: extractProductName(),
+      brand: extractBrand(),
+      price: extractPrice(),
+      vintage: extractVintage(),
+      volume: extractVolume(),
+      category: detectCategory(),
+      url: window.location.href,
+    };
+
+    // Only return if we have at minimum a name and price
+    if (bottleInfo.name && bottleInfo.price > 0) {
+      return bottleInfo;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error scraping bottle info:', error);
+    return null;
+  }
+}
+
+/**
+ * Determines if current page is likely a product page
+ */
+function isProductPage() {
+  const hasProductImage = document.querySelector('img[id*="product"], img[class*="product"], .product-image, .product-img');
+  const hasPriceElement = document.querySelector('[class*="price"], [id*="price"], .price, span.amount');
+  const hasAddToCartButton = document.querySelector('button[id*="add-to-cart"], button[class*="add-to-cart"], .add-to-cart, [class*="buy-now"]');
+  
+  return !!(hasProductImage && hasPriceElement && hasAddToCartButton);
+}
+
+/**
+ * Extracts product name from the page
+ */
+function extractProductName() {
+  const selectors = [
+    'h1[itemprop="name"]',
+    'h1.product-title',
+    'h1.product-name',
+    'h1.product_title',
+    'h1.product_name',
+    '.product-title h1',
+    '[data-testid="product-name"]',
+    '#productTitle',
+    '.product-single__title',
+    '.product-name h1',
+    'h1:first-of-type'
+  ];
+  
+  for (const selector of selectors) {
+    const element = document.querySelector(selector);
+    if (element && element.textContent.trim()) {
+      return element.textContent.trim();
+    }
+  }
+  
+  return document.title.split('|')[0].split('-')[0].trim();
+}
+
+/**
+ * Extracts brand name from the page
+ */
+function extractBrand() {
+  const selectors = [
+    '[itemprop="brand"]',
+    '.product-brand',
+    '.product_brand',
+    '[data-testid="product-brand"]',
+    '.brand-name',
+    '.product-meta__vendor',
+    '.vendor'
+  ];
+  
+  for (const selector of selectors) {
+    const element = document.querySelector(selector);
+    if (element && element.textContent.trim()) {
+      return element.textContent.trim();
+    }
+  }
+  
+  return '';
+}
+
+/**
+ * Extracts price from the page
+ */
+function extractPrice() {
+  const selectors = [
+    '[itemprop="price"]',
+    '[data-price-type="finalPrice"]',
+    '.product-price',
+    '.price-item--regular',
+    '.current-price',
+    '#priceblock_ourprice',
+    '.price-sales',
+    '.sales',
+    '[data-testid="price"]',
+    '.product__price',
+    '.price'
+  ];
+  
+  for (const selector of selectors) {
+    const element = document.querySelector(selector);
+    if (element && element.textContent.trim()) {
+      const text = element.textContent.trim();
+      const match = text.match(/[\d,.]+/);
+      if (match) {
+        return parseFloat(match[0].replace(/[^\d.]/g, ''));
+      }
+    }
+  }
+  
+  return 0;
+}
+
+/**
+ * Extracts vintage year from the page
+ */
+function extractVintage() {
+  const productName = extractProductName();
+  const nameMatch = productName.match(/\b(19|20)\d{2}\b/);
+  if (nameMatch) {
+    return nameMatch[0];
+  }
+  
+  return '';
+}
+
+/**
+ * Extracts volume information from the page
+ */
+function extractVolume() {
+  const volumePatterns = [
+    /(\d+(?:\.\d+)?)\s*ml/i,
+    /(\d+(?:\.\d+)?)\s*cl/i,
+    /(\d+(?:\.\d+)?)\s*l\b/i,
+    /(\d+(?:\.\d+)?)\s*oz/i
+  ];
+  
+  const productName = extractProductName();
+  for (const pattern of volumePatterns) {
+    const match = productName.match(pattern);
+    if (match) {
+      return match[0];
+    }
+  }
+  
+  return '';
+}
+
+/**
+ * Detects product category (whisky or wine)
+ */
+function detectCategory() {
+  const pageText = document.body.textContent.toLowerCase();
+  const productName = extractProductName().toLowerCase();
+  
+  const whiskyTerms = ['whisky', 'whiskey', 'bourbon', 'scotch', 'rye'];
+  const wineTerms = ['wine', 'red wine', 'white wine', 'rose', 'champagne'];
+  
+  for (const term of whiskyTerms) {
+    if (productName.includes(term) || pageText.includes(term)) {
+      return 'whisky';
+    }
+  }
+  
+  for (const term of wineTerms) {
+    if (productName.includes(term) || pageText.includes(term)) {
+      return 'wine';
+    }
+  }
+  
+  return 'unknown';
+}
+
+/**
  * Handles the comparison result from the background script
- * @param {Object} result - Comparison result
  */
 function handleComparisonResult(result) {
   isCheckingBottle = false;
@@ -76,7 +254,6 @@ function handleComparisonResult(result) {
     return;
   }
   
-  // If we found a match, show the popup
   if (result.match) {
     showComparisonPopup(result);
   }
@@ -84,32 +261,17 @@ function handleComparisonResult(result) {
 
 /**
  * Shows the comparison popup with the results
- * @param {Object} result - Comparison result data
  */
 function showComparisonPopup(result) {
-  // Remove any existing popup
   if (currentPopup) {
     document.body.removeChild(currentPopup);
   }
   
-  // Create popup element
   const popup = document.createElement('div');
   popup.className = 'honey-barrel-popup';
-  popup.setAttribute('aria-live', 'polite');
   
-  // Set popup content based on comparison result
   const { bottleInfo, baxusListing, savings, betterDeal } = result;
   
-  let statusClass = betterDeal ? 'better-deal' : 'no-savings';
-  let savingsText = '';
-  
-  if (betterDeal) {
-    savingsText = `Save $${savings}`;
-  } else {
-    savingsText = 'No savings available';
-  }
-  
-  // Create popup HTML content
   popup.innerHTML = `
     <div class="honey-barrel-header">
       <span class="honey-barrel-logo"></span>
@@ -129,8 +291,8 @@ function showComparisonPopup(result) {
             <span class="price">$${baxusListing.price.toFixed(2)}</span>
           </div>
         </div>
-        <div class="honey-barrel-savings ${statusClass}">
-          ${savingsText}
+        <div class="honey-barrel-savings ${betterDeal ? 'better-deal' : 'no-savings'}">
+          ${betterDeal ? `Save $${savings}` : 'No savings available'}
         </div>
       </div>
       ${betterDeal ? 
@@ -142,18 +304,15 @@ function showComparisonPopup(result) {
     </div>
   `;
   
-  // Add the popup to the page
   document.body.appendChild(popup);
   currentPopup = popup;
   
-  // Add event listener for close button
   const closeButton = popup.querySelector('.honey-barrel-close');
   closeButton.addEventListener('click', () => {
     document.body.removeChild(popup);
     currentPopup = null;
   });
   
-  // Automatically remove popup after display time
   setTimeout(() => {
     if (currentPopup === popup && document.body.contains(popup)) {
       document.body.removeChild(popup);
