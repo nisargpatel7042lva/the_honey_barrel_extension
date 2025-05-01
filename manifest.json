@@ -16,22 +16,21 @@
       "128": "assets/icon128.png"
     }
   },
-  "background": {
-    "service_worker": "background/background.js",
-    "type": "module"
-  },
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": ["<all_urls>"],
       "js": ["content/content.js"],
       "css": ["content/content.css"]
     }
   ],
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "scripting",
+    "tabs"
   ],
   "host_permissions": [
-    "https://services.baxus.co/*"
+    "https://services.baxus.co/*",
+    "<all_urls>"
   ]
 }

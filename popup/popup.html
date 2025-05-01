@@ -16,9 +16,24 @@
     </header>
     
     <div class="content">
-      <div class="status">
-        <h2>Whisky & Wine Price Finder</h2>
-        <p>The Honey Barrel is active and searching for the best prices on BAXUS.</p>
+      <div class="search-section">
+        <h2>Search for Bottles</h2>
+        <div class="search-options">
+          <div class="search-box">
+            <input type="text" id="bottleUrl" placeholder="Enter product URL" class="search-input">
+            <button id="searchUrl" class="search-button">Search</button>
+          </div>
+          <div class="divider">or</div>
+          <div class="upload-box">
+            <input type="file" id="bottleImage" accept="image/*" class="file-input">
+            <label for="bottleImage" class="upload-button">Upload Image</label>
+          </div>
+        </div>
+      </div>
+
+      <div id="results" class="results-section hidden">
+        <h3>Search Results</h3>
+        <div id="resultContent" class="result-content"></div>
       </div>
       
       <div class="features">

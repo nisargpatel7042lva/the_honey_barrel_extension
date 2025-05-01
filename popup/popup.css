@@ -67,9 +67,99 @@ header {
   clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
 }
 
-h1 {
-  font-size: 18px;
+/* Search Section */
+.search-section {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.search-section h2 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+}
+
+.search-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.search-box {
+  display: flex;
+  gap: 8px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.search-button {
+  padding: 8px 16px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
   font-weight: 600;
+}
+
+.divider {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.upload-box {
+  text-align: center;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-button {
+  display: block;
+  padding: 8px 16px;
+  background: var(--background-gray);
+  border: 2px dashed var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-light);
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.upload-button:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* Results Section */
+.results-section {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.results-section h3 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+}
+
+.result-content {
+  background: var(--background-gray);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.hidden {
+  display: none;
 }
 
 /* Content */
@@ -81,24 +171,6 @@ h1 {
   overflow-y: auto;
 }
 
-.status {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.status h2 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--primary-dark);
-}
-
-.status p {
-  font-size: 14px;
-  color: var(--text-light);
-}
-
-/* Features */
 .features {
   display: flex;
   flex-direction: column;
@@ -170,7 +242,6 @@ h1 {
   color: var(--text-light);
 }
 
-/* CTA */
 .cta {
   margin-top: auto;
   display: flex;
@@ -200,7 +271,6 @@ h1 {
   transform: translateY(1px);
 }
 
-/* Footer */
 footer {
   padding: 12px;
   text-align: center;
