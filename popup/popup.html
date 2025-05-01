@@ -17,22 +17,25 @@
     
     <div class="content">
       <div class="search-section">
-        <h2>Search for Bottles</h2>
+        <h2>Find Similar Bottles</h2>
         <div class="search-options">
-          <div class="search-box">
-            <input type="text" id="bottleUrl" placeholder="Enter product URL" class="search-input">
-            <button id="searchUrl" class="search-button">Search</button>
-          </div>
-          <div class="divider">or</div>
           <div class="upload-box">
             <input type="file" id="bottleImage" accept="image/*" class="file-input">
-            <label for="bottleImage" class="upload-button">Upload Image</label>
+            <label for="bottleImage" class="upload-button">
+              <span class="upload-icon"></span>
+              Upload Bottle Image
+            </label>
           </div>
         </div>
       </div>
 
+      <div id="loading" class="loading-section hidden">
+        <div class="spinner"></div>
+        <p>Analyzing image...</p>
+      </div>
+
       <div id="results" class="results-section hidden">
-        <h3>Search Results</h3>
+        <h3>Similar Bottles</h3>
         <div id="resultContent" class="result-content"></div>
       </div>
       
@@ -40,8 +43,8 @@
         <div class="feature">
           <div class="feature-icon search-icon"></div>
           <div class="feature-text">
-            <h3>Automatic Detection</h3>
-            <p>We'll automatically detect whisky and wine products as you browse.</p>
+            <h3>Image Recognition</h3>
+            <p>Upload a bottle image to find similar products</p>
           </div>
         </div>
         
@@ -49,21 +52,9 @@
           <div class="feature-icon compare-icon"></div>
           <div class="feature-text">
             <h3>Price Comparison</h3>
-            <p>Compare retail prices with listings on the BAXUS marketplace.</p>
+            <p>Compare prices across multiple sources</p>
           </div>
         </div>
-        
-        <div class="feature">
-          <div class="feature-icon savings-icon"></div>
-          <div class="feature-text">
-            <h3>Find Savings</h3>
-            <p>Discover potential savings and better deals on your favorite bottles.</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="cta">
-        <a href="https://baxus.co" target="_blank" class="primary-button">Visit BAXUS</a>
       </div>
     </div>
     
@@ -71,6 +62,7 @@
       <p>© 2025 The Honey Barrel</p>
     </footer>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
