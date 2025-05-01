@@ -47,56 +47,25 @@ async function detectBottle() {
       return;
     }
     
-    // Fetch BAXUS listings directly
-    const baxusListings = await fetchBaxusListings();
-    
-    // Find matching bottle
-    const match = findMatchingBottle(bottleInfo, baxusListings);
-    
-    if (match) {
-      // Calculate potential savings
-      const savings = bottleInfo.price > match.price ? 
-        (bottleInfo.price - match.price).toFixed(2) : 0;
-      
-      showComparisonPopup({
-        match: true,
-        bottleInfo,
-        baxusListing: match,
-        savings,
-        betterDeal: match.price < bottleInfo.price
-      });
-    }
-    
-    isCheckingBottle = false;
+    // Send bottle info to background for matching
+    chrome.runtime.sendMessage({
+      type: 'BOTTLE_DETECTED',
+      bottleInfo: bottleInfo
+    }, (response) => {
+      if (response && response.match) {
+        showComparisonPopup({
+          match: true,
+          bottleInfo: response.bottleInfo,
+          baxusListing: response.baxusListing,
+          savings: response.savings,
+          betterDeal: response.betterDeal
+        });
+      }
+      isCheckingBottle = false;
+    });
   } catch (error) {
     console.error('Error in bottle detection:', error);
     isCheckingBottle = false;
-  }
-}
-
-/**
- * Fetches listings from BAXUS marketplace API
- */
-async function fetchBaxusListings() {
-  try {
-    const response = await fetch(BAXUS_API);
-    if (!response.ok) {
-      throw new Error(`BAXUS API error: ${response.status}`);
-    }
-    const data = await response.json();
-    return data.hits.map(item => ({
-      id: item._source.id || '',
-      name: item._source.name || '',
-      brand: item._source.brand || '',
-      vintage: item._source.vintage || '',
-      volume: item._source.volume || '',
-      price: parseFloat(item._source.price) || 0,
-      url: `https://baxus.co/listing/${item._source.id}`,
-      category: item._source.category || 'unknown'
-    }));
-  } catch (error) {
-    console.error('Error fetching BAXUS listings:', error);
-    return [];
   }
 }
 
@@ -284,29 +253,6 @@ function detectCategory() {
   }
   
   return 'unknown';
-}
-
-/**
- * Finds a matching bottle in BAXUS listings
- */
-function findMatchingBottle(bottleInfo, baxusListings) {
-  if (!bottleInfo || !bottleInfo.name || !baxusListings || !baxusListings.length) {
-    return null;
-  }
-  
-  const normalizedBottleName = bottleInfo.name.toLowerCase().replace(/[^\w\s]/g, '');
-  
-  for (const listing of baxusListings) {
-    const normalizedListingName = listing.name.toLowerCase().replace(/[^\w\s]/g, '');
-    
-    // Simple matching for now - can be improved with fuzzy matching
-    if (normalizedListingName.includes(normalizedBottleName) || 
-        normalizedBottleName.includes(normalizedListingName)) {
-      return listing;
-    }
-  }
-  
-  return null;
 }
 
 /**
