@@ -14,55 +14,15 @@
         <h1>The Honey Barrel</h1>
       </div>
     </header>
-    
     <div class="content">
-      <div class="search-section">
-        <h2>Find Similar Bottles</h2>
-        <div class="search-options">
-          <div class="upload-box">
-            <input type="file" id="bottleImage" accept="image/*" class="file-input">
-            <label for="bottleImage" class="upload-button">
-              <span class="upload-icon"></span>
-              Upload Bottle Image
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div id="loading" class="loading-section hidden">
-        <div class="spinner"></div>
-        <p>Analyzing image...</p>
-      </div>
-
-      <div id="results" class="results-section hidden">
-        <h3>Similar Bottles</h3>
-        <div id="resultContent" class="result-content"></div>
-      </div>
-      
-      <div class="features">
-        <div class="feature">
-          <div class="feature-icon search-icon"></div>
-          <div class="feature-text">
-            <h3>Image Recognition</h3>
-            <p>Upload a bottle image to find similar products</p>
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon compare-icon"></div>
-          <div class="feature-text">
-            <h3>Price Comparison</h3>
-            <p>Compare prices across multiple sources</p>
-          </div>
-        </div>
+      <div class="info-message" style="padding: 24px; text-align: center; font-size: 1.1em;">
+        Visit a whisky or wine product page to see price comparisons with <b>BAXUS</b>.
       </div>
     </div>
-    
     <footer>
       <p>© 2025 The Honey Barrel</p>
     </footer>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
