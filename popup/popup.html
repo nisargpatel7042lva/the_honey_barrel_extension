@@ -7,19 +7,41 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="popup-container">
-    <header>
-      <div class="logo-container">
-        <div class="logo"></div>
-        <h1>The Honey Barrel</h1>
+  <div class="popup-container" style="font-family: 'Segoe UI', Arial, sans-serif; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin: 0; padding: 0;">
+    <header style="background: linear-gradient(90deg, #e09b3d 0%, #d97706 100%); padding: 18px 0 12px 0; border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: center;">
+      <div class="logo-container" style="display: flex; align-items: center;">
+        <div class="logo" style="width: 38px; height: 38px; margin-right: 10px;">
+          <!-- Bottle SVG Icon -->
+          <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="38" height="38" rx="19" fill="#fff"/>
+            <path d="M19 8c.83 0 1.5.67 1.5 1.5V13c0 .28.22.5.5.5h.5c.83 0 1.5.67 1.5 1.5v13c0 1.1-.9 2-2 2h-2c-1.1 0-2-.9-2-2V15c0-.83.67-1.5 1.5-1.5h.5c.28 0 .5-.22.5-.5V9.5C17.5 8.67 18.17 8 19 8z" fill="#e09b3d"/>
+          </svg>
+        </div>
+        <h1 style="color: #fff; font-size: 1.6em; font-weight: 700; margin: 0; letter-spacing: 1px;">The Honey Barrel</h1>
       </div>
     </header>
-    <div class="content">
-      <div class="info-message" style="padding: 24px; text-align: center; font-size: 1.1em;">
-        Visit a whisky or wine product page to see price comparisons with <b>BAXUS</b>.
+    <div class="content" style="padding: 24px 18px 12px 18px;">
+      <div class="info-card" style="background: #f9f5ee; border-radius: 10px; padding: 18px 14px; box-shadow: 0 1px 4px rgba(224,155,61,0.07); margin-bottom: 18px;">
+        <div style="font-size: 1.13em; color: #222; margin-bottom: 10px;">
+          <b>Why use this extension?</b>
+        </div>
+        <div style="font-size: 1em; color: #444; margin-bottom: 10px;">
+          The Honey Barrel helps you find the best whisky and wine deals by automatically comparing prices on product pages with the <b>BAXUS</b> marketplace. Save time, discover better offers, and never miss a great deal!
+        </div>
+        <div style="font-size: 0.98em; color: #666; margin-bottom: 8px;">
+          <span style="color: #d97706; font-weight: 600;">How it works:</span> Just browse your favorite whisky or wine shop. If a better price is found on BAXUS, you'll see a popup with the comparison.
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center;">
+        <a href="https://baxus.co" target="_blank" style="background: linear-gradient(90deg, #e09b3d 0%, #d97706 100%); color: #fff; font-weight: 600; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 1.08em; box-shadow: 0 2px 8px rgba(224,155,61,0.10); transition: background 0.2s;">
+          Visit BAXUS Marketplace
+        </a>
+      </div>
+      <div style="margin-top: 22px; text-align: center; color: #444; font-size: 1em;">
+        <span style="font-size: 1.1em;">🔎</span> Visit a whisky or wine product page to see price comparisons with <b>BAXUS</b>.
       </div>
     </div>
-    <footer>
+    <footer style="padding: 10px 0 0 0; text-align: center; color: #bbb; font-size: 0.98em; background: none;">
       <p>© 2025 The Honey Barrel</p>
     </footer>
   </div>
