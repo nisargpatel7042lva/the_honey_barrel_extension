@@ -40,8 +40,10 @@ async function detectBottle() {
   isCheckingBottle = true;
   
   try {
+    console.log('Honey Barrel: Running detectBottle');
     // Get bottle info
     const bottleInfo = scrapeProductInfo();
+    console.log('Honey Barrel: Scraped bottle info', bottleInfo);
     if (!bottleInfo || !bottleInfo.name || !bottleInfo.price) {
       isCheckingBottle = false;
       return;
@@ -259,6 +261,7 @@ function detectCategory() {
  * Shows the comparison popup with the results
  */
 function showComparisonPopup(result) {
+  console.log('Honey Barrel: Showing popup', result);
   if (currentPopup) {
     document.body.removeChild(currentPopup);
   }
